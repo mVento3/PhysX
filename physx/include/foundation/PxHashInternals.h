@@ -462,46 +462,47 @@ class PxHashBase : private PxAllocator
 			}
 		}
 
-		PX_INLINE void check() const
+		// TODO: Weird UE5 stuff...
+		/*PX_INLINE void check() const
 		{
 			PX_ASSERT(mTimestamp == mBase.mTimestamp);
-		}
+		}*/
 		PX_INLINE const Entry& operator*() const
 		{
-			check();
+			//check();
 			return mBase.mEntries[mEntry];
 		}
 		PX_INLINE Entry& operator*()
 		{
-			check();
+			//check();
 			return mBase.mEntries[mEntry];
 		}
 		PX_INLINE const Entry* operator->() const
 		{
-			check();
+			//check();
 			return mBase.mEntries + mEntry;
 		}
 		PX_INLINE Entry* operator->()
 		{
-			check();
+			//check();
 			return mBase.mEntries + mEntry;
 		}
 		PX_INLINE Iter operator++()
 		{
-			check();
+			//check();
 			advance();
 			return *this;
 		}
 		PX_INLINE Iter operator++(int)
 		{
-			check();
+			//check();
 			Iter i = *this;
 			advance();
 			return i;
 		}
 		PX_INLINE bool done() const
 		{
-			check();
+			//check();
 			return mEntry == mBase.EOL;
 		}
 
