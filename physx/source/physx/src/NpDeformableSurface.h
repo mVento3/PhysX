@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -56,6 +56,8 @@ public:
 	virtual void							release();
 	virtual PxActorType::Enum				getType() const { return PxActorType::eDEFORMABLE_SURFACE; }
 	virtual PxBounds3	 					getWorldBounds(float inflation = 1.01f) const;
+	virtual void							setActorFlag(PxActorFlag::Enum flag, bool value);
+	virtual void							setActorFlags(PxActorFlags inFlags);
 
 	// PxDeformableBody API
 
@@ -66,8 +68,8 @@ public:
 	virtual		void						setLinearDamping(const PxReal linearDamping);
 	virtual		PxReal						getLinearDamping() const;
 
-	virtual		void						setMaxVelocity(const PxReal maxVelocity);
-	virtual		PxReal						getMaxVelocity() const;
+	virtual		void						setMaxLinearVelocity(const PxReal maxLinearVelocity);
+	virtual		PxReal						getMaxLinearVelocity() const;
 
 	virtual		void						setMaxDepenetrationVelocity(const PxReal maxDepenetrationVelocity);
 	virtual		PxReal						getMaxDepenetrationVelocity() const;

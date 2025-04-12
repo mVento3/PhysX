@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -410,7 +410,7 @@ public:
 
 	\see getDrive() PxD6JointDrive
 
-	<b>Default</b> The default drive spring and damping values are zero, the force limit is zero, and no flags are set.
+	<b>Default</b> The default drive spring and damping values are zero, the force limit is PX_MAX_F32, and no flags are set.
 	*/
 	virtual void				setDrive(PxD6Drive::Enum index, const PxD6JointDrive& drive)	= 0;
 
@@ -494,6 +494,20 @@ protected:
 	virtual	bool				isKindOf(const char* name) const { PX_IS_KIND_OF(name, "PxD6Joint", PxJoint); }
 
 	//~serialization
+
+public:
+	/**
+	\brief Returns the GPU D6 joint index.
+
+	\note Only use in combination with enabled GPU dynamics and enabled direct GPU API
+	      (see #PxSceneFlag::eENABLE_GPU_DYNAMICS, #PxSceneFlag::eENABLE_DIRECT_GPU_API,
+		  #PxBroadPhaseType::eGPU)
+
+	\return The GPU index, or PX_INVALID_D6_JOINT_GPU_INDEX if the joint is not part of a PxScene.
+
+	\see PxDirectGPUAPI::getD6JointData()
+	*/
+	virtual PxD6JointGPUIndex getGPUIndex() const = 0;
 };
 
 #if !PX_DOXYGEN

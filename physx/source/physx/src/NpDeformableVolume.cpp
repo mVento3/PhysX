@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -141,13 +141,37 @@ PxBounds3 NpDeformableVolume::getWorldBounds(float inflation) const
 
 	PX_SIMD_GUARD;
 
-	PxBounds3 bounds = sim->getBounds();
+	const PxBounds3 bounds = getNpScene()->getScScene().getBoundsArray().getBounds(sim->getShapeSim().getElementID());
 	PX_ASSERT(bounds.isValid());
 
 	// PT: unfortunately we can't just scale the min/max vectors, we need to go through center/extents.
 	const PxVec3 center = bounds.getCenter();
 	const PxVec3 inflatedExtents = bounds.getExtents() * inflation;
 	return PxBounds3::centerExtents(center, inflatedExtents);
+}
+
+void NpDeformableVolume::setActorFlag(PxActorFlag::Enum flag, bool val)
+{
+	PX_CHECK_AND_RETURN(flag == PxActorFlag::eDISABLE_GRAVITY || !val, "PxDeformableBody only supports PxActorFlag::eDISABLE_GRAVITY!");
+
+	PxActorFlags flags = mCore.getActorFlags();
+	if(val)
+		flags.raise(flag);
+	else
+		flags.clear(flag);
+
+	mCore.setActorFlags(flags);
+	NpActorTemplate<PxDeformableVolume>::setActorFlag(flag, val);
+}
+
+void NpDeformableVolume::setActorFlags(PxActorFlags inFlags)
+{
+	PX_CHECK_AND_RETURN(inFlags & PxActorFlag::eVISUALIZATION, "PxDeformableBody doesn't supports PxActorFlag::eVISUALIZATION!");
+	PX_CHECK_AND_RETURN(inFlags & PxActorFlag::eSEND_SLEEP_NOTIFIES, "PxDeformableBody doesn't supports PxActorFlag::eSEND_SLEEP_NOTIFIES!");
+	PX_CHECK_AND_RETURN(inFlags & PxActorFlag::eDISABLE_SIMULATION, "PxDeformableBody doesn't supports PxActorFlag::eDISABLE_SIMULATION!");
+
+	mCore.setActorFlags(inFlags);
+	NpActorTemplate<PxDeformableVolume>::setActorFlags(inFlags);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -191,7 +215,7 @@ PxReal NpDeformableVolume::getLinearDamping() const
 	return mCore.getLinearDamping();
 }
 
-void NpDeformableVolume::setMaxVelocity(const PxReal v)
+void NpDeformableVolume::setMaxLinearVelocity(const PxReal v)
 {
 	NpScene* npScene = getNpScene();
 	NP_WRITE_CHECK(npScene);
@@ -199,30 +223,30 @@ void NpDeformableVolume::setMaxVelocity(const PxReal v)
 	PX_CHECK_SCENE_API_WRITE_FORBIDDEN(npScene, "PxDeformableBody::setMaxVelocity() not allowed while simulation is running. "
 		"Call will be ignored.");
 
-	mCore.setMaxVelocity(v);
+	mCore.setMaxLinearVelocity(v);
 	UPDATE_PVD_PROPERTY
 }
 
-PxReal NpDeformableVolume::getMaxVelocity() const
+PxReal NpDeformableVolume::getMaxLinearVelocity() const
 {
-	return mCore.getMaxVelocity();
+	return mCore.getMaxLinearVelocity();
 }
 
 void NpDeformableVolume::setMaxDepenetrationVelocity(const PxReal v)
 {
 	NpScene* npScene = getNpScene();
 	NP_WRITE_CHECK(npScene);
-
+	PX_CHECK_AND_RETURN(v > 0.0f, "PxDeformableBody::setMaxDepenetrationVelocity(): value must be greater than zero.");
 	PX_CHECK_SCENE_API_WRITE_FORBIDDEN(npScene, "PxDeformableBody::setMaxDepenetrationVelocity() not allowed while simulation is running. "
 		"Call will be ignored.");
 
-	mCore.setMaxDepenetrationVelocity(v);
+	mCore.setMaxPenetrationBias(-v);
 	UPDATE_PVD_PROPERTY
 }
 
 PxReal NpDeformableVolume::getMaxDepenetrationVelocity() const
 {
-	return mCore.getMaxDepenetrationVelocity();
+	return -mCore.getMaxPenetrationBias();
 }
 
 void NpDeformableVolume::setSelfCollisionFilterDistance(const PxReal v)

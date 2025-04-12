@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -38,7 +38,7 @@
 #include "PxIsosurfaceExtraction.h"
 #include "foundation/PxArray.h"
 
-#define USE_CUDA_INTEROP (!PX_PUBLIC_RELEASE)
+#define USE_CUDA_INTEROP (PX_SUPPORT_GPU_PHYSX)
 
 #define CUDA_SUCCESS 0
 #define SHOW_SOLID_SDF_SLICE 0

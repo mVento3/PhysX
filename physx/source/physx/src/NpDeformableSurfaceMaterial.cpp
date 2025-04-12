@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -181,14 +181,14 @@ PxReal NpDeformableSurfaceMaterial::getBendingStiffness() const
 void NpDeformableSurfaceMaterial::setElasticityDamping(PxReal x)
 {
 	PX_CHECK_AND_RETURN(x >= 0.f, "PxDeformableSurfaceMaterial::setElasticityDamping: invalid float");
-	mMaterial.damping = x;
+	mMaterial.elasticityDamping = x;
 
 	updateMaterial();
 }
 
 PxReal NpDeformableSurfaceMaterial::getElasticityDamping() const
 {
-	return mMaterial.damping;
+	return mMaterial.elasticityDamping;
 }
 
 void NpDeformableSurfaceMaterial::setBendingDamping(PxReal x)

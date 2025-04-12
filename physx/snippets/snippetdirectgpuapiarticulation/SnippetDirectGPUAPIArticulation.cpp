@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
@@ -463,13 +463,13 @@ void initPhysics(bool /*interactive*/)
 
 	createScissorLift();
 
-	// run one setp to initialize the direct GPU API
+	// run one step to initialize the direct GPU API
 	gScene->simulate(1.0f / 60.f);
 	gScene->fetchResults(true);
 
 	// note that the link indexing in the direct GPU API does not follow the order
-	// in which the link are created, link geometries must followed the low level indexing,
-	// this is critical to render properly the scene.
+	// in which the links are created, link geometries must follow the low level indexing,
+	// this is critical to render the scene properly.
 	// first put placeholders in the arrays
 	for (PxU32 i = 0; i < gArticulation->getNbLinks(); ++i)
 	{

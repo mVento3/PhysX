@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -36,7 +36,6 @@
 #include "DyDynamics.h"
 #include "DyArticulationPImpl.h"
 #include "foundation/PxProfiler.h"
-#include "extensions/PxContactJoint.h"
 #include "DyFeatherstoneArticulationLink.h"
 #include "DyFeatherstoneArticulationJointData.h"
 #include "DyConstraint.h"
@@ -558,7 +557,7 @@ namespace Dy
 		const PxU32 rootDof = (rootMotion && !fixBase) ? 6 : 0; //add the DoF of the root in the floating base case
 
 		//note that with the new API, for both fixed-base and floating-base, we consider no acceleration for all joints and all links
-		//this is consistent with the assumption behind the robotic manipulator equation
+		//this is consistent with the assumption behind the equation of motion
 		if (rootMotion || fixBase)
 		{
 			Cm::SpatialVectorF* spatialZAForces = reinterpret_cast<Cm::SpatialVectorF*>(allocator->alloc(sizeof(Cm::SpatialVectorF) * linkCount));
@@ -1028,108 +1027,6 @@ namespace Dy
 		//}
 	}
 
-
-	void FeatherstoneArticulation::getCoefficientMatrix(const PxReal dt, const PxU32 linkID, const PxContactJoint* contactJoints, const PxU32 nbContacts, PxArticulationCache& cache)
-	{
-		if (mArticulationData.getDataDirty())
-		{
-			PxGetFoundation().error(PxErrorCode::eINVALID_OPERATION, PX_FL, "ArticulationHelper::getCoefficientMatrix() commonInit need to be called first to initialize data!");
-			return;
-		}
-
-		computeArticulatedSpatialInertia(mArticulationData);
-
-		ArticulationLink* links = mArticulationData.getLinks();
-	
-		const PxU32 linkCount = mArticulationData.getLinkCount();
-
-		PxReal* coefficientMatrix = cache.coefficientMatrix;
-
-		const PxU32 elementCount = mArticulationData.getDofs();
-		
-		//zero coefficient matrix
-		PxMemZero(coefficientMatrix, sizeof(PxReal) * elementCount * nbContacts);
-
-		const bool fixBase = mArticulationData.getArticulationFlags() & PxArticulationFlag::eFIX_BASE;
-	
-		for (PxU32 a = 0; a < nbContacts; ++a)
-		{
-			PxJacobianRow row;
-			contactJoints[a].computeJacobians(&row);
-
-			//impulse lin is contact normal, and ang is raxn. R is body2World, R(t) is world2Body
-			//| R(t),	0	|
-			//| R(t)*r, R(t)|
-			//r is the vector from center of mass to contact point
-			//p(impluse) =	|n|
-			//				|0|
-
-			//transform p(impluse) from work space to the local space of link
-			ArticulationLink& link = links[linkID];
-			PxTransform& body2World = link.bodyCore->body2World;
-
-			PxcScratchAllocator* allocator = reinterpret_cast<PxcScratchAllocator*>(cache.scratchAllocator);
-			ScratchData scratchData;
-			PxU8* tempMemory = allocateScratchSpatialData(allocator, linkCount, scratchData);
-
-			Cm::SpatialVectorF* Z = scratchData.spatialZAVectors;
-
-			//make sure all links' spatial zero acceleration impulse are zero
-			PxMemZero(Z, sizeof(Cm::SpatialVectorF) * linkCount);
-
-			const Cm::SpatialVectorF impl(body2World.rotateInv(row.linear0), body2World.rotateInv(row.angular0));
-
-			getZ(linkID, mArticulationData, Z, impl);
-
-			const PxU32 totalDofs = mArticulationData.getDofs();
-
-			const PxU32 size = sizeof(PxReal) * totalDofs;
-
-			PxU8* tData = reinterpret_cast<PxU8*>(allocator->alloc(size * 2));
-
-			PxReal* jointVelocities = reinterpret_cast<PxReal*>(tData);
-			PxReal* jointAccelerations = reinterpret_cast<PxReal*>(tData + size);
-			//zero joint Velocites
-			PxMemZero(jointVelocities, size);
-
-			getDeltaVWithDeltaJV(fixBase, linkID, mArticulationData, Z, jointVelocities);
-
-			const PxReal invDt = 1.f / dt;
-			//calculate joint acceleration due to velocity change
-			for (PxU32 i = 0; i < totalDofs; ++i)
-			{
-				jointAccelerations[i] = jointVelocities[i] * invDt;
-			}
-
-			//compute individual link's spatial inertia tensor. This is very important
-			computeSpatialInertia(mArticulationData);
-
-			PxReal* coeCol = &coefficientMatrix[elementCount * a];
-
-			//this means the joint force calculated by the inverse dynamic
-			//will be just influenced by joint acceleration change
-			scratchData.jointVelocities = NULL;
-			scratchData.externalAccels = NULL;
-
-			//Input
-			scratchData.jointAccelerations = jointAccelerations;
-
-			//a column of the coefficient matrix is the joint force
-			scratchData.jointForces = coeCol;
-
-			if (fixBase)
-			{
-				inverseDynamic(mArticulationData, PxVec3(0.f), scratchData, false);
-			}
-			else
-			{
-				inverseDynamicFloatingBase(mArticulationData, PxVec3(0.f), scratchData, false);
-			}
-
-			allocator->free(tData);
-			allocator->free(tempMemory);
-		}
-	}
 
 	void FeatherstoneArticulation::getImpulseResponseSlowInv(Dy::ArticulationLink* links,
 		const ArticulationData& data,
@@ -1767,7 +1664,7 @@ namespace Dy
 
 		Cm::SpatialVectorF* deltaV = reinterpret_cast<Cm::SpatialVectorF*>(allocator->alloc(sizeof(Cm::SpatialVectorF) * linkCount, true));
 
-		PxReal* previousLambdas =reinterpret_cast<PxReal*>(allocator->alloc(sizeof(PxReal)*nbJoints * 2, true));
+		PxReal* previousLambdas = reinterpret_cast<PxReal*>(allocator->alloc(sizeof(PxReal)*nbJoints * 2, true));
 		PxReal* lambdas = cache.lambda;
 
 		//this is the joint force changed caused by contact force based on impulse strength is 1

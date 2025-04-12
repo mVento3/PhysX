@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -42,12 +42,18 @@ namespace physx
 		PxReal	dynamicFriction;		//12
 		PxReal	thickness;				//16
 		PxReal	bendingStiffness;		//20
-		PxReal  damping;				//24
+		PxReal  elasticityDamping;		//24
 		PxReal  bendingDamping;			//28
 		PxReal	padding[1];				//32, 4 bytes padding to make the total size 32 bytes
 
 		PX_CUDA_CALLABLE PxsDeformableSurfaceMaterialData()
-		: youngs(1.e+6f), poissons(0.45f), dynamicFriction(0.0f), thickness(0.0f), bendingStiffness(0.0f), damping(0.0f), bendingDamping(0.0f)
+		: youngs(1.e+6f)
+		, poissons(0.45f)
+		, dynamicFriction(0.0f)
+		, thickness(0.0f)
+		, bendingStiffness(0.0f)
+		, elasticityDamping(0.0f)
+		, bendingDamping(0.0f)
 		{}
 
 		PxsDeformableSurfaceMaterialData(const PxEMPTY) {}

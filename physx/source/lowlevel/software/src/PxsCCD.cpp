@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -1530,8 +1530,8 @@ void PxsCCDContext::updateCCD(PxReal dt, PxBaseTask* continuation, IG::IslandSim
 			const PxsRigidCore* rc1 = unit.mRigidCore1;
 			
 			{
-				const PxsShapeCore* sc0 = unit.mShapeCore0;
-				const PxsShapeCore* sc1 = unit.mShapeCore1;
+				const PxsShapeCore* sc0 = unit.getShapeCore0();
+				const PxsShapeCore* sc1 = unit.getShapeCore1();
 
 				PxsRigidBody* ba0 = cm->getRigidBody0();
 				PxsRigidBody* ba1 = cm->getRigidBody1();
@@ -1612,8 +1612,8 @@ void PxsCCDContext::updateCCD(PxReal dt, PxBaseTask* continuation, IG::IslandSim
 					p.mCCDShape1 = ccdShape1;
 					p.mHasFriction = rc0->hasCCDFriction() || rc1->hasCCDFriction();
 					p.mMinToi = PX_MAX_REAL;
-					p.mG0 = npUnit.mShapeCore0->mGeometry.getType();
-					p.mG1 = npUnit.mShapeCore1->mGeometry.getType();
+					p.mG0 = npUnit.getGeomType0();
+					p.mG1 = npUnit.getGeomType1();
 					p.mCm = cm;
 					p.mIslandId = 0xFFFFffff;
 					p.mIsEarliestToiHit = false;

@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -62,7 +62,6 @@ public:
 										void						importExtraData(PxDeserializationContext& context);
 		PX_FORCE_INLINE					void						setMeshFactory(MeshFactory* f)		{ mMeshFactory = f;					}
 		PX_PHYSX_COMMON_API	static		HeightField*				createObject(PxU8*& address, PxDeserializationContext& context);
-		PX_PHYSX_COMMON_API static		void						getBinaryMetaData(PxOutputStream& stream);
 										void						resolveReferences(PxDeserializationContext&) {}
 
 							virtual		void						requiresObjects(PxProcessPxBaseCallback&){}

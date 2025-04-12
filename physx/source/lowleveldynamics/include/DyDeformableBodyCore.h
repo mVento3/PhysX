@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 
 #ifndef DY_DEFORMABLE_BODY_CORE_H
 #define DY_DEFORMABLE_BODY_CORE_H
@@ -48,14 +48,15 @@ public:
 	PxReal					selfCollisionStressTolerance;
 	//~PxFEMParameters
 
-	PxReal					maxVelocity;
-	PxReal					maxDepenetrationVelocity;
+	PxReal					maxLinearVelocity;
+	PxReal					maxPenetrationBias;
 
 	PxU16					solverIterationCounts; //vel iters are in low word and pos iters in high word.
 	PxArray<PxU16>			materialHandles;
 	PxReal					wakeCounter;
 
 	PxDeformableBodyFlags	bodyFlags;
+	PxActorFlags			actorFlags;
 	bool					dirty;
 
 	DeformableBodyCore()
@@ -67,11 +68,12 @@ public:
 		, selfCollisionFilterDistance(0.1f)
 		, selfCollisionStressTolerance(0.9f)
 		//~PxFEMParameters
-		, maxVelocity(PX_MAX_REAL)
-		, maxDepenetrationVelocity(0.0f)
+		, maxLinearVelocity(1e32f) // see Sc::BodyCore::BodyCore
+		, maxPenetrationBias(-1e32f) // see PxsBodyCore::init
 		, solverIterationCounts(0)
 		, wakeCounter(0)
 		, bodyFlags(0)
+		, actorFlags(0)
 		, dirty(false)
 	{
 	}

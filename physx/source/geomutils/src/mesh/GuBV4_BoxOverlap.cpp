@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -110,7 +110,7 @@ static PX_FORCE_INLINE void setupBoxParams(ParamsT* PX_RESTRICT params, const Bo
 
 PxIntBool BV4_OverlapBoxAny(const Box& box, const BV4Tree& tree, const PxMat44* PX_RESTRICT worldm_Aligned)
 {
-	const SourceMesh* PX_RESTRICT mesh =static_cast<const SourceMesh*>(tree.mMeshInterface);
+	const SourceMesh* PX_RESTRICT mesh = static_cast<const SourceMesh*>(tree.mMeshInterface);
 
 	Box localBox;
 	computeLocalBox(localBox, box, worldm_Aligned);

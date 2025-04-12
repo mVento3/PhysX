@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -428,7 +428,7 @@ struct ExtMultiQueryCallback : public PrunerRaycastCallback, public PrunerOverla
 			mFilterData			(filterData),
 			mFilterCall			(filterCall),
 			mShrunkDistance		(shrunkDistance),
-			mMeshAnyHitFlags	((hitFlags.isSet(PxHitFlag::eMESH_ANY) || anyHit) ? PxHitFlag::eMESH_ANY : PxHitFlag::Enum(0)),
+			mMeshAnyHitFlags	((hitFlags.isSet(PxHitFlag::eANY_HIT) || anyHit) ? PxHitFlag::eANY_HIT : PxHitFlag::Enum(0)),
 			mReportTouchesAgain	(true),
 			mFarBlockFound		(filterData.flags & PxQueryFlag::eNO_BLOCK),
 			mNoBlock			(filterData.flags & PxQueryFlag::eNO_BLOCK),

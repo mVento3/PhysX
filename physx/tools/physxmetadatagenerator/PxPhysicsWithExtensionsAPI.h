@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 #ifndef PX_PHYSICS_NXPHYSICSWITHEXTENSIONS_API
@@ -96,7 +96,6 @@ static DisabledPropertyEntry gDisabledProperties[] = {
 	DisabledPropertyEntry( "PxCustomGeometry", "Callbacks" ),
 	DisabledPropertyEntry( "PxJoint", "ClassName" ),
 	DisabledPropertyEntry( "PxDistanceJoint", "ClassName" ),
-	DisabledPropertyEntry( "PxContactJoint", "ClassName"),
 	DisabledPropertyEntry( "PxGearJoint", "ClassName"),
 	DisabledPropertyEntry( "PxRackAndPinionJoint", "ClassName"),
 	DisabledPropertyEntry( "PxFixedJoint", "ClassName" ),
@@ -120,6 +119,8 @@ static DisabledPropertyEntry gDisabledProperties[] = {
 //	DisabledPropertyEntry( "PxTolerancesScale", "IsValid" ),
 	DisabledPropertyEntry( "PxConstraint", "SolverResidual" ),
 	DisabledPropertyEntry( "PxArticulationReducedCoordinate", "SolverResidual" ),
+    DisabledPropertyEntry( "PxConstraint", "GPUIndex"),
+    DisabledPropertyEntry( "PxD6Joint", "GPUIndex"),
 };
 
 //Append these properties to this type.
@@ -150,6 +151,7 @@ static const char* gImportantPhysXTypes[] =
 	"PxArticulationJointReducedCoordinate",
 	"PxArticulationLimit",
 	"PxArticulationDrive",
+	"PxJointFrictionParams",
 	"PxScene",
 	"PxPhysics",
 	"PxHeightFieldDesc",
@@ -191,7 +193,6 @@ static const char* gExtensionPhysXTypes[] =
 	"PxDistanceJoint",
 	"PxGearJoint",
 	"PxRackAndPinionJoint",
-	"PxContactJoint",
 	"PxFixedJoint",
 	"PxPrismaticJoint",
 	"PxRevoluteJoint",

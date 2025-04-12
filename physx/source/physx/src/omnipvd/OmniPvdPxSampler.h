@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -33,6 +33,7 @@
 #include "foundation/PxSimpleTypes.h"
 #include "foundation/PxHashMap.h"
 #include "foundation/PxArray.h"
+#include "foundation/PxHashSet.h"
 #include "foundation/PxMutex.h"
 #include "foundation/PxUserAllocated.h"
 #include "foundation/PxErrorCallback.h"
@@ -48,6 +49,8 @@ namespace physx
 	class PxMaterial;
 
 	class PxArticulationReducedCoordinate;
+	class PxArticulationJointReducedCoordinate;
+	class PxArticulationLink;
 	class PxRigidDynamic;
 
 	class PxDeformableMaterial;
@@ -64,6 +67,7 @@ namespace physx
 void streamActorName(const physx::PxActor & a, const char* name);
 void streamSceneName(const physx::PxScene & s, const char* name);
 void streamArticulationName(const physx::PxArticulationReducedCoordinate & art, const char* name);
+void streamArticulationJointName(const physx::PxArticulationJointReducedCoordinate& joint, const char* name);
 
 void streamShapeMaterials(const physx::PxShape&, physx::PxMaterial* const * mats, physx::PxU32 nbrMaterials);
 
@@ -121,13 +125,16 @@ public:
 	void incrementFrame(OmniPvdWriter& pvdWriter, bool recordProfileFrame = false); // stopFrame (frameID), then startFrame (frameID + 1)
 	void stopLastFrame(OmniPvdWriter& pvdWriter);
 	
+	void addRigidDynamicReset(const physx::PxRigidDynamic* rigidDynamic);
 	void addRigidDynamicForceReset(const physx::PxRigidDynamic* rigidDynamic);
 	void addRigidDynamicTorqueReset(const physx::PxRigidDynamic* rigidDynamic);
+	void removeRigidDynamicReset(const physx::PxRigidDynamic* rigidDynamic);
 	
+	void addArticulationFromLinkFlagChangeReset(const physx::PxArticulationLink* link);
 	void addArticulationLinksForceReset(const physx::PxArticulationReducedCoordinate* articulation);
 	void addArticulationLinksTorqueReset(const physx::PxArticulationReducedCoordinate* articulation);
-	
 	void addArticulationJointsForceReset(const physx::PxArticulationReducedCoordinate* articulation);
+	void removeArticulationReset(const physx::PxArticulationReducedCoordinate* articulation);
 	
 	void resetForces();
 
@@ -135,13 +142,12 @@ private:
 	physx::PxScene& mScene;
 	physx::PxU64 mFrameId;
 
-	physx::PxArray<const PxRigidDynamic*> mRigidDynamicForceSets;
-	physx::PxArray<const PxRigidDynamic*> mRigidDynamicTorqueSets;
+	physx::PxHashSet<const PxRigidDynamic*> mResetRigidDynamicForce;
+	physx::PxHashSet<const PxRigidDynamic*> mResetRigidDynamicTorque;
 
-	physx::PxArray<const PxArticulationReducedCoordinate*> mArticulationLinksForceSets;
-	physx::PxArray<const PxArticulationReducedCoordinate*> mArticulationLinksTorqueSets;
-
-	physx::PxArray<const PxArticulationReducedCoordinate*> mArticulationJointsForceSets;
+	physx::PxHashSet<const PxArticulationReducedCoordinate*> mResetArticulationLinksForce;
+	physx::PxHashSet<const PxArticulationReducedCoordinate*> mResetArticulationLinksTorque;
+	physx::PxHashSet<const PxArticulationReducedCoordinate*> mResetArticulationJointsForce;
 };
 
 }
@@ -164,7 +170,6 @@ public:
 	void onObjectRemove(const physx::PxBase& object);
 	
 	virtual void reportError(physx::PxErrorCode::Enum code, const char* message, const char* file, int line) PX_OVERRIDE;
-
 };
 
 

@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -441,7 +441,7 @@ PxU32 physx::Gu::raycast_triangleMesh_RTREE(const TriangleMesh* mesh, const PxTr
 	const bool multipleHits = hitFlags & PxHitFlag::eMESH_MULTIPLE;
 
 	RayMeshColliderCallback callback(
-		multipleHits ? CallbackMode::eMULTIPLE : (hitFlags & PxHitFlag::eMESH_ANY ? CallbackMode::eANY : CallbackMode::eCLOSEST),
+		multipleHits ? CallbackMode::eMULTIPLE : (hitFlags & PxHitFlag::eANY_HIT ? CallbackMode::eANY : CallbackMode::eCLOSEST),
 		hits, maxHits, stride, &meshGeom.scale, &pose, world2vertexSkewP, hitFlags, rayDir, isDoubleSided, distCoeff);
 
 	MeshRayCollider::collide<0, 1>(orig, dir, maxDist, bothSides, static_cast<const RTreeTriangleMesh*>(meshData), callback, NULL);

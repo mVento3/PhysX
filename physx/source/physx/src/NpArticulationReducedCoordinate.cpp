@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -582,11 +582,6 @@ PxSpatialVelocity NpArticulationReducedCoordinate::getLinkAcceleration(const PxU
 	return mCore.getLinkAcceleration(linkId, isGpuSimEnabled);
 }
 
-PxU32 NpArticulationReducedCoordinate::getGpuArticulationIndex()
-{
-	return getGPUIndex();
-}
-
 PxArticulationGPUIndex NpArticulationReducedCoordinate::getGPUIndex() const
 {
 	NP_READ_CHECK(getNpScene());
@@ -945,6 +940,13 @@ void NpArticulationReducedCoordinate::release()
 
 	if (npScene)
 	{
+	#if PX_SUPPORT_OMNI_PVD
+		if (npScene->getFlags() & PxSceneFlag::eENABLE_DIRECT_GPU_API)
+		{
+			npScene->getSceneOvdClientInternal().removeArticulationReset(this);
+		}
+	#endif
+
 		npScene->removeArticulationTendons(*this);
 		npScene->removeArticulationMimicJoints(*this);
 		npScene->scRemoveArticulation(*this);
@@ -1186,40 +1188,6 @@ void NpArticulationReducedCoordinate::putToSleep()
 
 	PX_ASSERT(!isAPIWriteForbidden());
 	mCore.putToSleep();
-}
-
-void NpArticulationReducedCoordinate::setMaxCOMLinearVelocity(const PxReal maxLinearVelocity)
-{
-	NP_WRITE_CHECK(getNpScene());
-
-	PX_CHECK_SCENE_API_WRITE_FORBIDDEN(getNpScene(), "PxArticulationReducedCoordinate::setMaxCOMLinearVelocity() not allowed while simulation is running. Call will be ignored.");
-
-	scSetMaxLinearVelocity(maxLinearVelocity);
-
-	OMNI_PVD_SET(OMNI_PVD_CONTEXT_HANDLE, PxArticulationReducedCoordinate, maxLinearVelocity, static_cast<const PxArticulationReducedCoordinate&>(*this), maxLinearVelocity);
-}
-
-PxReal NpArticulationReducedCoordinate::getMaxCOMLinearVelocity() const
-{
-	NP_READ_CHECK(getNpScene());
-	return mCore.getMaxLinearVelocity();
-}
-
-void NpArticulationReducedCoordinate::setMaxCOMAngularVelocity(const PxReal maxAngularVelocity)
-{
-	NP_WRITE_CHECK(getNpScene());
-
-	PX_CHECK_SCENE_API_WRITE_FORBIDDEN(getNpScene(), "PxArticulationReducedCoordinate::setMaxCOMAngularVelocity() not allowed while simulation is running. Call will be ignored.");
-
-	scSetMaxAngularVelocity(maxAngularVelocity);
-
-	OMNI_PVD_SET(OMNI_PVD_CONTEXT_HANDLE, PxArticulationReducedCoordinate, maxAngularVelocity, static_cast<const PxArticulationReducedCoordinate&>(*this), maxAngularVelocity);
-}
-
-PxReal NpArticulationReducedCoordinate::getMaxCOMAngularVelocity() const
-{
-	NP_READ_CHECK(getNpScene());
-	return mCore.getMaxAngularVelocity();
 }
 
 PxU32 NpArticulationReducedCoordinate::getNbLinks() const

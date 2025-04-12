@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -264,6 +264,11 @@ void NpShape::setGeometry(const PxGeometry& g)
 {
 	NpScene* ownerScene = getNpScene();
 	NP_WRITE_CHECK(ownerScene);
+	if(ownerScene && (ownerScene->getFlags() & PxSceneFlag::eENABLE_DIRECT_GPU_API) && ownerScene->isDirectGPUAPIInitialized())
+	{
+		 NP_API_READ_WRITE_ERROR_MSG(
+			"NpShape::setGeometry() is not allowed when direct-GPU API is already initialized.");
+	}
 	PX_CHECK_AND_RETURN(isWritable(), "PxShape::setGeometry: shared shapes attached to actors are not writable.");
 #if PX_CHECKED
 	if(!checkShape(g, "PxShape::setGeometry(): Invalid geometry!"))
@@ -704,11 +709,6 @@ PxReal NpShape::getMinTorsionalPatchRadius() const
 {
 	NP_READ_CHECK(getNpScene());	
 	return mCore.getMinTorsionalPatchRadius();
-}
-
-PxU32 NpShape::getInternalShapeIndex() const
-{
-	return getGPUIndex();
 }
 
 PxShapeGPUIndex NpShape::getGPUIndex() const

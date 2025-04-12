@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 
 #ifndef SC_PARTICLESYSTEM_SIM_H
 #define SC_PARTICLESYSTEM_SIM_H
@@ -30,9 +30,8 @@
 #include "foundation/PxPreprocessor.h"
 #if PX_SUPPORT_GPU_PHYSX
 #include "foundation/PxUserAllocated.h"
-#include "ScActorSim.h"
+#include "ScGpuActorSim.h"
 #include "ScParticleSystemCore.h" 
-#include "ScParticleSystemShapeSim.h"
 
 namespace physx
 {
@@ -40,7 +39,7 @@ namespace physx
 	{
 		class Scene;
 
-		class ParticleSystemSim : public ActorSim
+		class ParticleSystemSim : public GPUActorSim
 		{
 			PX_NOCOPY(ParticleSystemSim)
 		public:
@@ -52,23 +51,16 @@ namespace physx
 
 			virtual			PxActor*		getPxActor() const { return getCore().getPxActor(); }
 
-			void							updateBounds();
-			void							updateBoundsInAABBMgr();
-			PxBounds3						getBounds() const;
-		
 			bool							isSleeping() const;
 			bool							isActive() const { return true; }
 			void							sleepCheck(PxReal dt);
 
 			void							setActive(bool active, bool asPartOfCreation=false);
 
-			const			ParticleSystemShapeSim& getShapeSim() const	 { return mShapeSim; }
-							ParticleSystemShapeSim& getShapeSim()		 { return mShapeSim; }
+			void							createLowLevelVolume();
 
 		private:
-			Dy::ParticleSystem*									mLLParticleSystem;
-
-			ParticleSystemShapeSim								mShapeSim;
+			Dy::ParticleSystem*				mLLParticleSystem;
 
 // PT: as far as I can tell these are never actually called
 //								void			activate();

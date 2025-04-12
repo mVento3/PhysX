@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -366,7 +366,7 @@ void setupFinalizeExtSolverContacts(
 
 		const PxContactPoint* contactBase0 = buffer + c.contactPatches[c.correlationListHeads[i]].start;
 
-		const PxReal coefficient = (contactBase0->materialFlags & PxMaterialFlag::eIMPROVED_PATCH_FRICTION && frictionPatch.anchorCount == 2) ? 0.5f : 1.f;
+		const PxReal coefficient = (frictionPatch.anchorCount == 2) ? 0.5f : 1.f;
 
 		const PxReal staticFriction = contactBase0->staticFriction * coefficient;
 		const PxReal dynamicFriction = contactBase0->dynamicFriction * coefficient;

@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -260,6 +260,7 @@ void PxsContext::createTransformCache(PxVirtualAllocatorCallback& allocatorCallb
 {
 	mTransformCache = PX_NEW(PxsTransformCache)(allocatorCallback);
 }
+
 
 PxsContactManager* PxsContext::createContactManager(PxsContactManager* contactManager, bool useCCD)
 {
@@ -525,7 +526,7 @@ bool PxsContext::getManagerTouchEventCount(PxU32* newTouch, PxU32* lostTouch, Px
 	return true;
 }
 
-bool PxsContext::fillManagerTouchEvents(PxvContactManagerTouchEvent* newTouch, PxU32& newTouchCount,
+void PxsContext::fillManagerTouchEvents(PxvContactManagerTouchEvent* newTouch, PxU32& newTouchCount,
 										PxvContactManagerTouchEvent* lostTouch, PxU32& lostTouchCount,
 										PxvContactManagerTouchEvent* ccdTouch, PxU32& ccdTouchCount)
 {
@@ -586,7 +587,6 @@ bool PxsContext::fillManagerTouchEvents(PxvContactManagerTouchEvent* newTouch, P
 	newTouchCount = PxU32(newTouch - newTouchStart);
 	lostTouchCount = PxU32(lostTouch - lostTouchStart);
 	ccdTouchCount = PxU32(ccdTouch - ccdTouchStart);
-	return true;
 }
 
 void PxsContext::beginUpdate()

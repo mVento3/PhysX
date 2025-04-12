@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -47,7 +47,6 @@ public:
 						void					resolveReferences(PxDeserializationContext& context);
 	    virtual	        void					requiresObjects(PxProcessPxBaseCallback& c);
 		static			NpAggregate*			createObject(PxU8*& address, PxDeserializationContext& context);
-		static			void					getBinaryMetaData(PxOutputStream& stream);
 //~PX_SERIALIZATION
 												NpAggregate(PxU32 maxActors, PxU32 maxShapes, PxAggregateFilterHint filterHint);
 		virtual									~NpAggregate();

@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -53,6 +53,8 @@
 
 namespace physx
 {
+	class NpArticulationLink;
+
 PX_INLINE PxVec3 invertDiagInertia(const PxVec3& m)
 {
 	return PxVec3(	m.x == 0.0f ? 0.0f : 1.0f/m.x,
@@ -715,9 +717,27 @@ PX_FORCE_INLINE void NpRigidBodyTemplate<APIClass>::setRigidBodyFlagsInternal(co
 	}
 
 	scSetFlags(filteredNewFlags);
-
+#if PX_SUPPORT_OMNI_PVD
 	OMNI_PVD_SET(OMNI_PVD_CONTEXT_HANDLE, PxRigidBody, rigidBodyFlags, static_cast<PxRigidBody&>(*this), filteredNewFlags)
-
+	// Check also that the scene is DirectGPU API driven scene
+	if(scene)
+	{
+		const PxSceneFlags sFlags = scene->getFlags();
+		if ( (currentFlags & PxRigidBodyFlag::eRETAIN_ACCELERATIONS) && !(filteredNewFlags & PxRigidBodyFlag::eRETAIN_ACCELERATIONS) && (sFlags & PxSceneFlag::eENABLE_DIRECT_GPU_API) )
+		{
+			// Add the articulation link's articulation or rigidDynamic body to the potential candidates of the force/torque nullification in the fetchResults zeroForce call
+			PxActorType::Enum aType = this->getType();
+			if (aType == PxActorType::eARTICULATION_LINK)
+			{
+				scene->getSceneOvdClientInternal().addArticulationFromLinkFlagChangeReset(reinterpret_cast<PxArticulationLink*>(this));
+			}
+			else if (aType==PxActorType::eRIGID_DYNAMIC)
+			{
+				scene->getSceneOvdClientInternal().addRigidDynamicReset(reinterpret_cast<PxRigidDynamic*>(this));
+			}
+		}
+	}
+#endif
 	// PT: the SQ update should be done after the scSetFlags() call
 	if(mustUpdateSQ)
 		this->getShapeManager().markActorForSQUpdate(scene->getSQAPI(), *this);

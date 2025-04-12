@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -45,7 +45,6 @@ public:
 // PX_SERIALIZATION
 												NpConstraint(PxBaseFlags baseFlags) : PxConstraint(baseFlags), NpBase(PxEmpty), mCore(PxEmpty) {}
 	static			NpConstraint*				createObject(PxU8*& address, PxDeserializationContext& context);
-	static			void						getBinaryMetaData(PxOutputStream& stream);
 					void						preExportDataReset() {}
 					void						exportExtraData(PxSerializationContext&) {}
 					void						importExtraData(PxDeserializationContext&) {}
@@ -73,6 +72,7 @@ public:
 	virtual			void*						getExternalReference(PxU32& typeID)	PX_OVERRIDE PX_FINAL;
 	virtual			void						setConstraintFunctions(PxConstraintConnector& n, const PxConstraintShaderTable& t)	PX_OVERRIDE PX_FINAL;
 	virtual			PxConstraintResidual		getSolverResidual() const PX_OVERRIDE PX_FINAL { return mCore.getSolverResidual(); }
+	virtual			PxConstraintGPUIndex		getGPUIndex() const PX_OVERRIDE PX_FINAL;
 	//~PxConstraint
 
 					void						updateConstants(PxsSimulationController& simController);

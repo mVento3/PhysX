@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
@@ -61,8 +61,8 @@ void Sc::ShapeInteraction::visualize(PxRenderOutput& out, PxsContactManagerOutpu
 {
 	if(mManager)  // sleeping pairs have no contact points -> do not visualize
 	{
-		Sc::ActorSim* actorSim0 = &getShape0().getActor();
-		Sc::ActorSim* actorSim1 = &getShape1().getActor();
+		Sc::ActorSim* actorSim0 = &getActor0();
+		Sc::ActorSim* actorSim1 = &getActor1();
 		if(!actorSim0->isNonRigid() && !actorSim1->isNonRigid())
 		{
 			PxU32 offset;

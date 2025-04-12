@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -31,7 +31,6 @@
 
 #include "foundation/PxVec3.h"
 #include "common/PxPhysXCommonConfig.h"
-#include "common/PxMetaData.h"
 #include "GuBigConvexData.h"
 
 namespace physx
@@ -44,7 +43,6 @@ namespace physx
 		public:
 // PX_SERIALIZATION
 											BigConvexData(const PxEMPTY)	{}
-		static		void					getBinaryMetaData(PxOutputStream& stream);
 //~PX_SERIALIZATION
 											BigConvexData();
 											~BigConvexData();

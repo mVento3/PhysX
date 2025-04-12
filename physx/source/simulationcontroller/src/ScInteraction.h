@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -59,9 +59,7 @@ namespace Sc
 	// Interactions are used for connecting actors into activation groups. An interaction always connects exactly two actors. 
 	// An interaction is implicitly active if at least one of the two actors it connects is active.
 
-	// PT: we need PxUserAllocated only for ArticulationJointSim, which for some reason doesn't follow the same design as the others.
-	// The others are allocated from pools in NphaseCore.
-	class Interaction : public PxUserAllocated
+	class Interaction
 	{
 		PX_NOCOPY(Interaction)
 										Interaction(ActorSim& actor0, ActorSim& actor1, InteractionType::Enum interactionType, PxU8 flags);

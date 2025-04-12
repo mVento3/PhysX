@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 
 #include "PxPhysXConfig.h"
 
@@ -191,9 +191,9 @@ namespace physx
 
 		if (s_library == NULL)
 		{
-			// load libcuda.so here since gcc configured with --as-needed won't link to it
+			// load libcuda.so.1 here since gcc configured with --as-needed won't link to it
 			// if there is no call from the binary to it.
-			void* hLibCuda = dlopen("libcuda.so", RTLD_NOW | RTLD_GLOBAL);
+			void* hLibCuda = dlopen("libcuda.so.1", RTLD_NOW | RTLD_GLOBAL);
 			if (hLibCuda)
 			{
 				s_library = dlopen(gPhysXGpuLibraryName, RTLD_NOW);
@@ -201,7 +201,7 @@ namespace physx
 			else
 			{
 				char* error = dlerror();
-				reportError(PX_FL, "Could not load libcuda.so: %s\n", error);
+				reportError(PX_FL, "Could not load libcuda.so.1: %s\n", error);
 				return;
 			}	
 		}

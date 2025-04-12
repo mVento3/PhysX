@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -78,11 +78,7 @@ Method prototype for create finalize solver contact
 
 typedef	bool (*PxcCreateFinalizeSolverContactMethod)(CREATE_FINALIZE_SOLVER_CONTACT_METHOD_ARGS);
 
-extern PxcCreateFinalizeSolverContactMethod createFinalizeMethods[3];
-
 typedef	SolverConstraintPrepState::Enum (*PxcCreateFinalizeSolverContactMethod4)(CREATE_FINALIZE_SOLVER_CONTACT_METHOD_ARGS_4);
-
-extern PxcCreateFinalizeSolverContactMethod4 createFinalizeMethods4[3];
 
 bool createFinalizeSolverContacts(	PxSolverContactDesc& contactDesc,
 									PxsContactManagerOutput& output,

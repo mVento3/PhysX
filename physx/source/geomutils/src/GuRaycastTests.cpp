@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -560,7 +560,7 @@ PxU32 raycast_heightField(GU_RAY_FUNC_PARAMS)
 	if (t > maxDist)
 		return 0;
 
-	// PT: if eMESH_ANY is used then eMESH_MULTIPLE won't be, and we'll stop the query after 1 hit is found. There is no difference
+	// PT: if eANY_HIT is used then eMESH_MULTIPLE won't be, and we'll stop the query after 1 hit is found. There is no difference
 	// between 'any hit' and 'closest hit' for HFs since hits are reported in order.
 	HFTraceSegmentCallback callback(hits, hitFlags.isSet(PxHitFlag::eMESH_MULTIPLE) ? maxHits : 1, stride, hitFlags, hfUtil, pose,
 									rayDir, localRayDir, localRayOrig, isDoubleSided); // make sure we return only 1 hit without eMESH_MULTIPLE

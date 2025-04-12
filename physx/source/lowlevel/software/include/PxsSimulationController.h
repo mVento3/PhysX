@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -38,6 +38,8 @@
 #include "foundation/PxUserAllocated.h"
 #include "PxScene.h"
 #include "PxParticleSystem.h"
+#include "PxArticulationTendonData.h"
+#include "PxNodeIndex.h"
 
 namespace physx
 {
@@ -74,7 +76,6 @@ namespace physx
 		class ShapeSimBase;
 	}
 
-	class PxNodeIndex;
 	class PxsTransformCache;
 	class PxvNphaseImplementationContext;
 	class PxBaseTask;
@@ -106,9 +107,14 @@ namespace physx
 	class PxsSimulationControllerOVDCallbacks : public PxUserAllocated
 	{
 	public:
-		virtual void    processRigidDynamicSet(PxsRigidBody** rigids, void* dataVec, PxRigidDynamicGPUIndex* gpuIndices, PxRigidDynamicGPUAPIWriteType::Enum dataType, PxU32 nbElements) = 0;
-		virtual void    processArticulationSet(Dy::FeatherstoneArticulation** simBodyVec, void* dataVec, PxArticulationGPUIndex* indexVec, PxArticulationGPUAPIWriteType::Enum dataType, PxU32 nbElements,
+		virtual void    processRigidDynamicSet(const PxsRigidBody* const * rigids, const void* dataVec, const PxRigidDynamicGPUIndex* gpuIndices, PxRigidDynamicGPUAPIWriteType::Enum dataType, PxU32 nbElements) = 0;
+		virtual void    processArticulationSet(const Dy::FeatherstoneArticulation* const * simBodyVec, const void* dataVec, const PxArticulationGPUIndex* indexVec, PxArticulationGPUAPIWriteType::Enum dataType, PxU32 nbElements,
 			PxU32 maxLinks, PxU32 maxDofs, PxU32 maxFixedTendons, PxU32 maxTendonJoints, PxU32 maxSpatialTendons, PxU32 maxSpatialTendonAttachments) = 0;
+		
+		// Returns the number of elements in a data block as well as the size of the datablock, see PxArticulationGPUAPIWriteType::Enum for where the sizes etc are derived
+		PX_FORCE_INLINE void getArticulationDataElements(PxArticulationGPUAPIWriteType::Enum dataType, PxU32 maxLinks, PxU32 maxDofs, PxU32 maxFixedTendons, PxU32 maxTendonJoints, PxU32 maxSpatialTendons, PxU32 maxSpatialTendonAttachments,
+			PxU32& nbSubElements, PxU32& blockSize) const;
+
 		virtual ~PxsSimulationControllerOVDCallbacks() {}
 	};
 #endif
@@ -233,6 +239,8 @@ namespace physx
 		virtual void releaseParticleSystem(Dy::ParticleSystem* /*particleSystem*/) 	{}
 		virtual void releaseDeferredParticleSystemIds() 	{}
 
+#endif
+
 		virtual void setEnableOVDReadback(bool) {}
 		virtual bool getEnableOVDReadback() const { return false; }
 		virtual void setEnableOVDCollisionReadback(bool) {}
@@ -242,9 +250,8 @@ namespace physx
 		virtual void setOVDCallbacks(PxsSimulationControllerOVDCallbacks& /*ovdCallbacks*/) {}
 #endif
 
-#endif
-
 		virtual void updateDynamic(Dy::FeatherstoneArticulation* /*articulation*/, const PxNodeIndex& /*nodeIndex*/) {}
+		virtual void addJoint(const Dy::Constraint&) {}
 		virtual void updateJoint(const PxU32 /*edgeIndex*/, Dy::Constraint* /*constraint*/){}
 		virtual void updateBodies(PxsRigidBody** /*rigidBodies*/, PxU32* /*nodeIndices*/, const PxU32 /*nbBodies*/, PxsExternalAccelerationProvider* /*externalAccelerations*/) {}
 //		virtual void updateBody(PxsRigidBody* /*rigidBody*/, const PxU32 /*nodeIndex*/) {}
@@ -303,21 +310,11 @@ namespace physx
 
 		virtual PxArticulationGPUAPIMaxCounts getArticulationGPUAPIMaxCounts()	const	{ return PxArticulationGPUAPIMaxCounts(); }
 
+		virtual	bool	getD6JointData(void* /*data*/, const PxD6JointGPUIndex* /*gpuIndices*/, PxD6JointGPUAPIReadType::Enum /*dataType*/, PxU32 /*nbElements*/, PxF32 /*oneOverDt*/, CUevent /*startEvent*/, CUevent /*finishEvent*/) const { return false; }
+
 		// END NEW DIRECT-GPU API
 
 		// DEPRECATED DIRECT-GPU API
-
-		PX_DEPRECATED virtual	void	copyArticulationDataDEPRECATED(void* /*jointData*/, void* /*index*/, PxArticulationGpuDataType::Enum /*dataType*/, const PxU32 /*nbUpdatedArticulations*/, CUevent /*copyEvent*/) {}
-		PX_DEPRECATED virtual	void	applyArticulationDataDEPRECATED(void* /*data*/, void* /*index*/, PxArticulationGpuDataType::Enum /*dataType*/, const PxU32 /*nbUpdatedArticulations*/, CUevent /*waitEvent*/, CUevent /*signalEvent*/) {}
-		PX_DEPRECATED virtual	void	applyActorDataDEPRECATED(void* /*data*/, PxGpuActorPair* /*index*/, PxActorCacheFlag::Enum /*flag*/, const PxU32 /*nbUpdatedActors*/, CUevent /*waitEvent*/, CUevent /*signalEvent*/) {}
-		PX_DEPRECATED virtual	void	evaluateSDFDistancesDEPRECATED(const PxU32* /*sdfShapeIds*/, const PxU32 /*nbShapes*/, const PxVec4* /*samplePointsConcatenated*/,
-															const PxU32* /*samplePointCountPerShape*/, const PxU32 /*maxPointCount*/, PxVec4* /*localGradientAndSDFConcatenated*/, CUevent /*event*/)	{}
-		PX_DEPRECATED virtual	void 	copyBodyDataDEPRECATED(PxGpuBodyData* /*data*/, PxGpuActorPair* /*index*/, const PxU32 /*nbCopyActors*/, CUevent /*copyEvent*/){}
-		PX_DEPRECATED virtual	void	updateArticulationsKinematicDEPRECATED(CUevent /*signalEvent*/) {}
-		PX_DEPRECATED virtual	void	computeDenseJacobiansDEPRECATED(const PxIndexDataPair* /*indices*/, PxU32 /*nbIndices*/, CUevent /*computeEvent*/){}
-		PX_DEPRECATED virtual	void	computeGeneralizedMassMatricesDEPRECATED(const PxIndexDataPair* /*indices*/, PxU32 /*nbIndices*/, CUevent /*computeEvent*/){}
-		PX_DEPRECATED virtual	void	computeGeneralizedGravityForcesDEPRECATED(const PxIndexDataPair* /*indices*/, PxU32 /*nbIndices*/, const PxVec3& /*gravity*/, CUevent /*computeEvent*/){}
-		PX_DEPRECATED virtual	void	computeCoriolisAndCentrifugalForcesDEPRECATED(const PxIndexDataPair* /*indices*/, PxU32 /*nbIndices*/, CUevent /*computeEvent*/) {}
 
 		PX_DEPRECATED virtual	void	copySoftBodyDataDEPRECATED(void** /*data*/, void* /*dataSizes*/, void* /*softBodyIndices*/, PxSoftBodyGpuDataFlag::Enum /*flag*/, const PxU32 /*nbCopySoftBodies*/, const PxU32 /*maxSize*/, CUevent /*copyEvent*/) {}
 		PX_DEPRECATED virtual	void	applySoftBodyDataDEPRECATED(void** /*data*/, void* /*dataSizes*/, void* /*softBodyIndices*/, PxSoftBodyGpuDataFlag::Enum /*flag*/, const PxU32 /*nbUpdatedSoftBodies*/, const PxU32 /*maxSize*/, CUevent /*applyEvent*/, CUevent /*signalEvent*/) {}
@@ -355,6 +352,78 @@ namespace physx
 	public:
 		const PxIntBool						mGPU;	// PT: true for GPU version, used to quickly skip calls for CPU version
 	};
+
+#if PX_SUPPORT_OMNI_PVD
+	PX_FORCE_INLINE void PxsSimulationControllerOVDCallbacks::getArticulationDataElements(PxArticulationGPUAPIWriteType::Enum dataType, PxU32 maxLinks, PxU32 maxDofs, PxU32 maxFixedTendons, PxU32 maxTendonJoints, PxU32 maxSpatialTendons, PxU32 maxSpatialTendonAttachments,
+		PxU32& nbSubElements, PxU32& blockSize) const
+	{
+		PxU32 singleSubElementSize = 0;
+		switch(dataType)
+		{
+		case PxArticulationGPUAPIWriteType::eJOINT_POSITION:
+		case PxArticulationGPUAPIWriteType::eJOINT_VELOCITY:
+		case PxArticulationGPUAPIWriteType::eJOINT_FORCE:
+		case PxArticulationGPUAPIWriteType::eJOINT_TARGET_VELOCITY:
+		case PxArticulationGPUAPIWriteType::eJOINT_TARGET_POSITION:
+		{
+			nbSubElements = maxDofs;
+			singleSubElementSize = sizeof(PxReal);
+			break;
+		}
+		case PxArticulationGPUAPIWriteType::eROOT_GLOBAL_POSE:
+		{
+			nbSubElements = 1;
+			singleSubElementSize = sizeof(PxTransform);
+			break;
+		}
+		case PxArticulationGPUAPIWriteType::eROOT_LINEAR_VELOCITY:
+		case PxArticulationGPUAPIWriteType::eROOT_ANGULAR_VELOCITY:
+		{
+			nbSubElements = 1;
+			singleSubElementSize = sizeof(PxVec3);
+			break;
+		}
+		case PxArticulationGPUAPIWriteType::eLINK_FORCE:
+		case PxArticulationGPUAPIWriteType::eLINK_TORQUE:
+		{
+			nbSubElements = maxLinks;
+			singleSubElementSize = sizeof(PxVec3);
+			break;
+		}
+		case PxArticulationGPUAPIWriteType::eFIXED_TENDON:
+		{
+			nbSubElements = maxFixedTendons;
+			singleSubElementSize = sizeof(PxGpuFixedTendonData);
+			break;
+		}
+		case PxArticulationGPUAPIWriteType::eFIXED_TENDON_JOINT:
+		{
+			nbSubElements = maxFixedTendons * maxTendonJoints;
+			singleSubElementSize = sizeof(PxGpuTendonJointCoefficientData);
+			break;
+		}
+		case PxArticulationGPUAPIWriteType::eSPATIAL_TENDON:
+		{
+			nbSubElements = maxSpatialTendons;
+			singleSubElementSize = sizeof(PxGpuSpatialTendonData);
+			break;
+		}
+		case PxArticulationGPUAPIWriteType::eSPATIAL_TENDON_ATTACHMENT:
+		{
+			nbSubElements = maxSpatialTendons * maxSpatialTendonAttachments;
+			singleSubElementSize = sizeof(PxGpuTendonAttachmentData);
+			break;
+		}
+		default:
+			PX_ALWAYS_ASSERT();
+			nbSubElements = 0;
+			singleSubElementSize = 0;
+			break;
+		}
+		blockSize = singleSubElementSize * nbSubElements;
+	}
+#endif
+
 }
 
 #endif

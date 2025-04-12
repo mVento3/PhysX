@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -284,9 +284,23 @@ void Sc::ArticulationJointCore::setFrictionCoefficient(PxReal frictionCoefficien
 	setSimDirty();
 }
 
+void Sc::ArticulationJointCore::setFrictionParams(PxArticulationAxis::Enum axis, const PxJointFrictionParams& jointFrictionParams)
+{
+	mCore.setFrictionParams(axis, jointFrictionParams);
+
+	setSimDirty();
+}
+
 void Sc::ArticulationJointCore::setMaxJointVelocity(PxReal maxJointV)
 {
 	mCore.setMaxJointVelocity(maxJointV);
+
+	setSimDirty();
+}
+
+void Sc::ArticulationJointCore::setMaxJointVelocity(PxArticulationAxis::Enum axis, PxReal maxJointV)
+{
+	mCore.setMaxJointVelocity(axis, maxJointV);
 
 	setSimDirty();
 }

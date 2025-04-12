@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -30,7 +30,6 @@
 #define GU_CONVEX_MESH_H
 
 #include "foundation/PxBitAndData.h"
-#include "common/PxMetaData.h"
 #include "geometry/PxConvexMesh.h"
 #include "geometry/PxConvexMeshGeometry.h"
 #include "foundation/PxUserAllocated.h"
@@ -103,7 +102,6 @@ namespace Gu
 		 virtual		void					exportExtraData(PxSerializationContext& stream);
 						void					importExtraData(PxDeserializationContext& context);
 		PX_PHYSX_COMMON_API static	ConvexMesh*	createObject(PxU8*& address, PxDeserializationContext& context);
-		PX_PHYSX_COMMON_API static	void		getBinaryMetaData(PxOutputStream& stream);
 						void					resolveReferences(PxDeserializationContext&)				{}
 		virtual			void					requiresObjects(PxProcessPxBaseCallback&){}
 	//~PX_SERIALIZATION

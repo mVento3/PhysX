@@ -22,14 +22,13 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.  
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.  
 
 #include "foundation/PxPreprocessor.h"
 
 #if PX_SUPPORT_GPU_PHYSX
 #include "foundation/PxErrorCallback.h"
 #include "ScParticleSystemShapeCore.h"
-#include "ScParticleSystemShapeSim.h"
 #include "ScPhysics.h"
 #include "PxvGlobals.h"
 #include "PxPhysXGpu.h"

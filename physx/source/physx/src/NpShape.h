@@ -22,14 +22,13 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
 #ifndef NP_SHAPE_H
 #define NP_SHAPE_H
 
-#include "common/PxMetaData.h"
 #include "PxShape.h"
 #include "NpBase.h"
 #include "ScShapeCore.h"
@@ -52,7 +51,6 @@ public:
 	virtual			void						requiresObjects(PxProcessPxBaseCallback& c);
 					void						resolveReferences(PxDeserializationContext& context);
 	static			NpShape*					createObject(PxU8*& address, PxDeserializationContext& context);
-	static			void						getBinaryMetaData(PxOutputStream& stream);
 //~PX_SERIALIZATION
 												NpShape(const PxGeometry& geometry,
 													PxShapeFlags shapeFlags,
@@ -97,7 +95,6 @@ public:
 	virtual			PxReal						getTorsionalPatchRadius() const	PX_OVERRIDE PX_FINAL;
 	virtual			void						setMinTorsionalPatchRadius(PxReal)	PX_OVERRIDE PX_FINAL;
 	virtual			PxReal						getMinTorsionalPatchRadius() const	PX_OVERRIDE PX_FINAL;
-	PX_DEPRECATED	virtual			PxU32		getInternalShapeIndex() const	PX_OVERRIDE PX_FINAL; // deprecated
 	virtual			PxShapeGPUIndex				getGPUIndex() const PX_OVERRIDE PX_FINAL;
 
 	virtual			void						setFlag(PxShapeFlag::Enum flag, bool value)	PX_OVERRIDE PX_FINAL;

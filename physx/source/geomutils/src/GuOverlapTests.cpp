@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -634,7 +634,7 @@ static bool GeomOverlapCallback_ConvexCoreGeometry(GU_OVERLAP_FUNC_PARAMS)
 		return false;
 
 	PxVec3 point0, point1, axis;
-	PxReal dist = Gu::RefGjkEpa::gjkDistance(shape0, shape1, shape0.pose, shape1.pose, shape0.margin + shape1.margin, point0, point1, axis);
+	PxReal dist = Gu::RefGjkEpa::computeGjkDistance(shape0, shape1, shape0.pose, shape1.pose, shape0.margin + shape1.margin, point0, point1, axis);
 
 	return dist <= shape0.margin + shape1.margin + FLT_EPSILON;
 }

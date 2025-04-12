@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 
 #include "DyConstraintPartition.h"
 #include "foundation/PxHashMap.h"
@@ -895,10 +895,8 @@ PxU32 partitionContactConstraints(ConstraintPartitionOut& out, const ConstraintP
 	//PX_ASSERT(numConstraintsDifferentBodies == numConstraintDescriptors);
 
 	//Now handle the articulated self-constraints.
-	PxU32 totalConstraintCount = numConstraintsDifferentBodies;	
 
 	out.mNumDifferentBodyConstraints = numConstraintsDifferentBodies;
-	out.mNumSelfConstraints = totalConstraintCount - numConstraintsDifferentBodies;
 
 	out.mNumStaticConstraints = numStaticConstraints;
 	out.mNumOverflowConstraints = numOverflows;

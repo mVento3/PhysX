@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -349,6 +349,14 @@ void D6Joint::setDriveVelocity(const PxVec3& linear, const PxVec3& angular, bool
 
 	OMNI_PVD_WRITE_SCOPE_END
 #endif
+}
+
+PxD6JointGPUIndex D6Joint::getGPUIndex() const
+{
+	PX_COMPILE_TIME_ASSERT(sizeof(PxD6JointGPUIndex) == sizeof(PxConstraintGPUIndex));
+	PX_COMPILE_TIME_ASSERT(PX_INVALID_D6_JOINT_GPU_INDEX == PX_INVALID_CONSTRAINT_GPU_INDEX);
+
+	return getConstraint()->getGPUIndex();
 }
 
 void* D6Joint::prepareData()

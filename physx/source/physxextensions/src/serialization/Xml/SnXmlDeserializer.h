@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -175,7 +175,7 @@ namespace physx { namespace Sn {
 	}
 	
 	template<typename TDataType>
-	inline void readStridedBufferProperty( XmlReader& ioReader, const char* inPropName, PxTypedStridedData<const TDataType>& ioData, PxU32& outCount, XmlMemoryAllocator& inAllocator)
+	inline void readStridedBufferProperty( XmlReader& ioReader, const char* inPropName, PxTypedBoundedData<const TDataType>& ioData, PxU32& outCount, XmlMemoryAllocator& inAllocator)
 	{
 		TDataType* tempData = NULL;
 		readStridedBufferProperty<TDataType>( ioReader, inPropName, tempData, ioData.stride, outCount, inAllocator );

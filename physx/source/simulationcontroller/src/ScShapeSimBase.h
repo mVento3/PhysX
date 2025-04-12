@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved. 
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved. 
 
 #ifndef SC_SHAPESIM_BASE_H
 #define SC_SHAPESIM_BASE_H
@@ -103,7 +103,7 @@ namespace physx
 
 			PX_FORCE_INLINE	void					internalAddToBroadPhase();
 			PX_FORCE_INLINE	bool					internalRemoveFromBroadPhase(bool wakeOnLostTouch = true);
-							void					initSubsystemsDependingOnElementID();
+							void					initSubsystemsDependingOnElementID(PxU32 indexFrom);
 							
 							PxsShapeCore*			mShapeCore;
 							PxU32					mSqBoundsId;

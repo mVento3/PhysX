@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 
 #include "foundation/PxPreprocessor.h"
 
@@ -258,14 +258,11 @@ void Sc::ParticleSystemCore::setFlags(PxParticleFlags flags)
 		if (wasRigidCollisionDisabled ^ isRigidCollisionDisabled)
 		{
 			if (wasRigidCollisionDisabled)
-				sim->getShapeSim().createLowLevelVolume();
+				sim->createLowLevelVolume();
 			else
-				sim->getShapeSim().destroyLowLevelVolume();
-
+				sim->destroyLowLevelVolume();
 		}
 	}
-
-	
 }
 
 #endif //PX_SUPPORT_GPU_PHYSX

@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
@@ -46,8 +46,6 @@ Sc::ArticulationCore::ArticulationCore() :
 	mCore.freezeThreshold			= 5e-6f * scale.speed * scale.speed;
 	mCore.wakeCounter				= Physics::sWakeCounterOnCreation;
 	mCore.gpuRemapIndex				= 0xffffffff;
-	mCore.maxLinearVelocity			= 1e+6f;
-	mCore.maxAngularVelocity		= 1e+6f;
 }
 
 Sc::ArticulationCore::~ArticulationCore()
@@ -73,26 +71,6 @@ void Sc::ArticulationCore::setWakeCounter(const PxReal v)
 	if(mSim)
 		mSim->debugCheckWakeCounterOfLinks(v);
 #endif
-}
-
-void Sc::ArticulationCore::setMaxLinearVelocity(const PxReal v)
-{
-	mCore.maxLinearVelocity = v;
-
-	if (mSim)
-	{
-		mSim->setArticulationDirty(Dy::ArticulationDirtyFlag::eDIRTY_VELOCITY_LIMITS);
-	}
-}
-
-void Sc::ArticulationCore::setMaxAngularVelocity(const PxReal v)
-{
-	mCore.maxAngularVelocity = v;
-
-	if (mSim)
-	{
-		mSim->setArticulationDirty(Dy::ArticulationDirtyFlag::eDIRTY_VELOCITY_LIMITS);
-	}
 }
 
 bool Sc::ArticulationCore::isSleeping() const

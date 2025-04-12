@@ -22,7 +22,7 @@
 ## (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ## OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##
-## Copyright (c) 2008-2024 NVIDIA Corporation. All rights reserved.
+## Copyright (c) 2008-2025 NVIDIA Corporation. All rights reserved.
 
 #
 # Build PhysXCommon common
@@ -84,8 +84,6 @@ SET(PHYSXCOMMON_COMMON_HEADERS
 	${PHYSX_ROOT_DIR}/include/common/PxBase.h
 	${PHYSX_ROOT_DIR}/include/common/PxCollection.h
 	${PHYSX_ROOT_DIR}/include/common/PxCoreUtilityTypes.h
-	${PHYSX_ROOT_DIR}/include/common/PxMetaData.h
-	${PHYSX_ROOT_DIR}/include/common/PxMetaDataFlags.h
 	${PHYSX_ROOT_DIR}/include/common/PxInsertionCallback.h
 	${PHYSX_ROOT_DIR}/include/common/PxPhysXCommonConfig.h
 	${PHYSX_ROOT_DIR}/include/common/PxRenderBuffer.h
@@ -176,6 +174,7 @@ SET(PHYSXCOMMON_GU_HEADERS
 	${GU_SOURCE_DIR}/include/GuDistancePointTetrahedron.h
 	${GU_SOURCE_DIR}/include/GuDistancePointTriangle.h
 	${GU_SOURCE_DIR}/include/GuIntersectionTriangleBox.h
+	${GU_SOURCE_DIR}/include/GuIntersectionTetrahedronTetrahedron.h
 	${GU_SOURCE_DIR}/include/GuCooking.h
 	${GU_SOURCE_DIR}/include/GuConvexSupport.h
 	${GU_SOURCE_DIR}/include/GuConvexGeometry.h
@@ -192,11 +191,10 @@ SOURCE_GROUP(geomutils\\include FILES ${PHYSXCOMMON_GU_HEADERS})
 SET(PHYSXCOMMON_GU_SOURCE
 	${GU_SOURCE_DIR}/src/GuBox.cpp
 	${GU_SOURCE_DIR}/src/GuCapsule.cpp
-	${GU_SOURCE_DIR}/src/GuCCTSweepTests.cpp	
+	${GU_SOURCE_DIR}/src/GuCCTSweepTests.cpp
 	${GU_SOURCE_DIR}/src/GuGeometryQuery.cpp
 	${GU_SOURCE_DIR}/src/GuInternal.cpp
 	${GU_SOURCE_DIR}/src/GuMeshFactory.cpp
-	${GU_SOURCE_DIR}/src/GuMetaData.cpp
 	${GU_SOURCE_DIR}/src/GuMTD.cpp
 	${GU_SOURCE_DIR}/src/GuOverlapTests.cpp
 	${GU_SOURCE_DIR}/src/GuRaycastTests.cpp
